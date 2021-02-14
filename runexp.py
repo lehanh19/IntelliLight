@@ -34,8 +34,12 @@ import random
 random.seed(SEED)
 import numpy as np
 np.random.seed(SEED)
-from tensorflow import set_random_seed
-set_random_seed((SEED))
+
+#from tensorflow import set_random_seed
+#set_random_seed((SEED))
+import tensorflow
+tensorflow.random.set_seed((SEED))
+
 import json
 import os
 import traffic_light_dqn
@@ -43,7 +47,7 @@ import time
 
 PATH_TO_CONF = os.path.join("conf", setting_memo)
 
-sumoBinary = r"/usr/bin/sumo-gui"
+sumoBinary = r"/usr/local/bin/sumo-gui"
 sumoCmd = [sumoBinary,
            '-c',
            r'{0}/data/{1}/cross.sumocfg'.format(os.path.split(os.path.realpath(__file__))[0], setting_memo)]
@@ -52,7 +56,7 @@ sumoCmd_pretrain = [sumoBinary,
                     r'{0}/data/{1}/cross_pretrain.sumocfg'.format(
                         os.path.split(os.path.realpath(__file__))[0], setting_memo)]
 
-sumoBinary_nogui = r"/usr/bin/sumo"
+sumoBinary_nogui = r"/usr/local/bin/sumo"
 sumoCmd_nogui = [sumoBinary_nogui,
                  '-c',
                  r'{0}/data/{1}/cross.sumocfg'.format(
@@ -92,7 +96,8 @@ for model_name in list_model_name:
             time.strftime('%m_%d_%H_%M_%S_', time.localtime(time.time())) + "seed_%d" % SEED
         )
 
-        traffic_light_dqn.main(memo=setting_memo, f_prefix=prefix, sumo_cmd_str=sumoCmd_nogui, sumo_cmd_pretrain_str=sumoCmd_nogui_pretrain)
+        #traffic_light_dqn.main(memo=setting_memo, f_prefix=prefix, sumo_cmd_str=sumoCmd_nogui, sumo_cmd_pretrain_str=sumoCmd_nogui_pretrain)
+        traffic_light_dqn.main(memo=setting_memo, f_prefix=prefix, sumo_cmd_str=sumoCmd, sumo_cmd_pretrain_str=sumoCmd_pretrain)
 
         print("finished {0}".format(traffic_file))
     print ("finished {0}".format(model_name))

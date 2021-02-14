@@ -104,9 +104,9 @@ listLanes=['edge1-0_0','edge1-0_1','edge1-0_2','edge2-0_0','edge2-0_1','edge2-0_
                                  'edge3-0_0','edge3-0_1','edge3-0_2','edge4-0_0','edge4-0_1','edge4-0_2']
 '''
 input: phase "NSG_SNG" , four lane number, in the key of W,E,S,N
-output: 
+output:
 1.affected lane number: 4_0_0, 4_0_1, 3_0_0, 3_0_1
-# 2.destination lane number, 0_3_0,0_3_1  
+# 2.destination lane number, 0_3_0,0_3_1
 
 '''
 
@@ -120,7 +120,7 @@ def end_sumo():
     traci.close()
 
 def get_current_time():
-    return traci.simulation.getCurrentTime() / 1000
+    return traci.simulation.getTime() / 1000
 
 def phase_affected_lane(phase="NSG_SNG",
                         four_lane_ids={'W': 'edge1-0', "E": "edge2-0", 'S': 'edge4-0', 'N': 'edge3-0'}):
@@ -243,7 +243,7 @@ def changeTrafficLight_7(current_phase=0):  # [WNG_ESG_WSG_ENG_NWG_SEG]
     # phases=["WNG_ESG_WSG_ENG_NWG_SEG","EWG_WEG_WSG_ENG_NWG_SEG","NSG_NEG_SNG_SWG_WSG_ENG_NWG_SEG"]
     next_phase = (current_phase + 1) % len(controlSignal)
     next_phase_time_eclipsed = 0
-    traci.trafficlights.setRedYellowGreenState(node_light_7, controlSignal[next_phase])
+    traci.trafficlight.setRedYellowGreenState(node_light_7, controlSignal[next_phase])
     return next_phase, next_phase_time_eclipsed
 
 
@@ -417,7 +417,7 @@ def get_partial_travel_time_duration(vehicle_dict, vehicle_id_list):
     travel_time_duration = 0
     for vehicle_id in vehicle_id_list:
         if (vehicle_id in vehicle_dict.keys()) and (vehicle_dict[vehicle_id].first_stop_time != -1):
-            travel_time_duration += (traci.simulation.getCurrentTime() / 1000 - vehicle_dict[vehicle_id].first_stop_time)/60.0
+            travel_time_duration += (traci.simulation.getTime() / 1000 - vehicle_dict[vehicle_id].first_stop_time)/60.0
     if len(vehicle_id_list) > 0:
         return travel_time_duration#/len(vehicle_id_list)
     else:
@@ -428,7 +428,7 @@ def get_travel_time_duration(vehicle_dict, vehicle_id_list):
     travel_time_duration = 0
     for vehicle_id in vehicle_id_list:
         if (vehicle_id in vehicle_dict.keys()):
-            travel_time_duration += (traci.simulation.getCurrentTime() / 1000 - vehicle_dict[vehicle_id].enter_time)/60.0
+            travel_time_duration += (traci.simulation.getTime() / 1000 - vehicle_dict[vehicle_id].enter_time)/60.0
     if len(vehicle_id_list) > 0:
         return travel_time_duration#/len(vehicle_id_list)
     else:
@@ -446,7 +446,7 @@ def update_vehicles_state(dic_vehicles):
             vehicle.id = vehicle_id
             traci.vehicle.subscribe(vehicle_id, (tc.VAR_LANE_ID, tc.VAR_SPEED))
             vehicle.speed = traci.vehicle.getSubscriptionResults(vehicle_id).get(64)
-            current_sumo_time = traci.simulation.getCurrentTime()/1000
+            current_sumo_time = traci.simulation.getTime()/1000
             vehicle.enter_time = current_sumo_time
             # if it enters and stops at the very first
             if (vehicle.speed < 0.1) and (vehicle.first_stop_time == -1):
@@ -455,7 +455,7 @@ def update_vehicles_state(dic_vehicles):
         else:
             dic_vehicles[vehicle_id].speed = traci.vehicle.getSubscriptionResults(vehicle_id).get(64)
             if (dic_vehicles[vehicle_id].speed < 0.1) and (dic_vehicles[vehicle_id].first_stop_time == -1):
-                dic_vehicles[vehicle_id].first_stop_time = traci.simulation.getCurrentTime()/1000
+                dic_vehicles[vehicle_id].first_stop_time = traci.simulation.getTime()/1000
             if (vehicle_id in vehicle_id_entering_list) == False:
                 dic_vehicles[vehicle_id].entering = False
 
@@ -537,8 +537,8 @@ def get_status_img(current_phase,tl_node_id=node_light_7,area_length=600):
 def set_yellow(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_list,node_id="node0"):
     Yellow = "yyyyyyyyyyyyyyyy"
     for i in range(3):
-        timestamp = traci.simulation.getCurrentTime() / 1000
-        traci.trafficlights.setRedYellowGreenState(node_id, Yellow)
+        timestamp = traci.simulation.getTime() / 1000
+        traci.trafficlight.setRedYellowGreenState(node_id, Yellow)
         traci.simulationStep()
         log_rewards(dic_vehicles, 0, rewards_info_dict, f_log_rewards, timestamp, rewards_detail_dict_list)
         update_vehicles_state(dic_vehicles)
@@ -546,8 +546,8 @@ def set_yellow(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_
 def set_all_red(dic_vehicles,rewards_info_dict,f_log_rewards,rewards_detail_dict_list,node_id="node0"):
     Red = "rrrrrrrrrrrrrrrr"
     for i in range(3):
-        timestamp = traci.simulation.getCurrentTime()/1000
-        traci.trafficlights.setRedYellowGreenState(node_id, Red)
+        timestamp = traci.simulation.getTime()/1000
+        traci.trafficlight.setRedYellowGreenState(node_id, Red)
         traci.simulationStep()
         log_rewards(dic_vehicles, 0, rewards_info_dict, f_log_rewards, timestamp,rewards_detail_dict_list)
         update_vehicles_state(dic_vehicles)
@@ -560,7 +560,7 @@ def run(action, current_phase, current_phase_duration, vehicle_dict, rewards_inf
         # set_all_red(vehicle_dict,rewards_info_dict,f_log_rewards, node_id=node_id)
         return_phase, _ = changeTrafficLight_7(current_phase=current_phase)  # change traffic light in SUMO according to actionToPerform
         return_phase_duration = 0
-    timestamp = traci.simulation.getCurrentTime() / 1000
+    timestamp = traci.simulation.getTime() / 1000
     traci.simulationStep()
     log_rewards(vehicle_dict, action, rewards_info_dict, f_log_rewards, timestamp, rewards_detail_dict_list)
     vehicle_dict = update_vehicles_state(vehicle_dict)
