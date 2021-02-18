@@ -47,7 +47,7 @@ import time
 
 PATH_TO_CONF = os.path.join("conf", setting_memo)
 
-sumoBinary = r"/usr/local/bin/sumo-gui"
+sumoBinary = r"C:\Program Files (x86)\Eclipse\Sumo\bin\sumo-gui"
 sumoCmd = [sumoBinary,
            '-c',
            r'{0}/data/{1}/cross.sumocfg'.format(os.path.split(os.path.realpath(__file__))[0], setting_memo)]
@@ -56,7 +56,7 @@ sumoCmd_pretrain = [sumoBinary,
                     r'{0}/data/{1}/cross_pretrain.sumocfg'.format(
                         os.path.split(os.path.realpath(__file__))[0], setting_memo)]
 
-sumoBinary_nogui = r"/usr/local/bin/sumo"
+sumoBinary_nogui = r"C:\Program Files (x86)\Eclipse\Sumo\bin\sumo"
 sumoCmd_nogui = [sumoBinary_nogui,
                  '-c',
                  r'{0}/data/{1}/cross.sumocfg'.format(
@@ -67,7 +67,7 @@ sumoCmd_nogui_pretrain = [sumoBinary_nogui,
                               os.path.split(os.path.realpath(__file__))[0], setting_memo)]
 
 for model_name in list_model_name:
-    for traffic_file, traffic_file_pretrain in list_traffic_files:
+    for traffic_file, traffic_file_pretrain in list_traffic_files[2:]:
         dic_exp = json.load(open(os.path.join(PATH_TO_CONF, "exp.conf"), "r"))
         dic_exp["MODEL_NAME"] = model_name
         dic_exp["TRAFFIC_FILE"] = traffic_file
