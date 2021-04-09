@@ -78,7 +78,7 @@ class TrafficLightDQN:
             os.path.join(self.path_set.PATH_TO_CONF, self.path_set.EXP_CONF),
             os.path.join(self.path_set.PATH_TO_OUTPUT, self.path_set.EXP_CONF))
 
-        self.agent = self.DIC_AGENTS[self.para_set.MODEL_NAME](num_phases=2,
+        self.agent = self.DIC_AGENTS[self.para_set.MODEL_NAME](num_phases=4,
                                                                num_actions=2,
                                                                path_set=self.path_set)
 
@@ -96,6 +96,7 @@ class TrafficLightDQN:
 
     def _generate_pre_train_ratios(self, phase_min_time, em_phase):
         phase_traffic_ratios = [phase_min_time]
+        # print("phase_min_time", phase_min_time)
 
         # generate how many varients for each phase
         for i, phase_time in enumerate(phase_min_time):
@@ -104,16 +105,19 @@ class TrafficLightDQN:
                     gen_phase_time = copy.deepcopy(phase_min_time)
                     gen_phase_time[i] += j
                     phase_traffic_ratios.append(gen_phase_time)
+                    # print("phase_traffic_ratios", phase_traffic_ratios)
             else:
                 # pass
                 for j in range(1, 5, 1):
                     gen_phase_time = copy.deepcopy(phase_min_time)
                     gen_phase_time[i] += j
                     phase_traffic_ratios.append(gen_phase_time)
+            # print("phase_traffic_ratios out", phase_traffic_ratios)
             for j in range(5, 20, 5):
                 gen_phase_time = copy.deepcopy(phase_min_time)
                 gen_phase_time[i] += j
                 phase_traffic_ratios.append(gen_phase_time)
+                # print("phase_traffic_ratios in", phase_traffic_ratios)
 
         return phase_traffic_ratios
 
@@ -172,7 +176,7 @@ class TrafficLightDQN:
 
             if if_pretrain:
                 if current_time > pre_train_count_per_ratio:
-                    print("Terminal occured. Episode end.")
+                    # print("Terminal occured. Episode end.")
                     s_agent.end_sumo()
                     ind_phase_time += 1
                     if ind_phase_time >= len(phase_traffic_ratios):
@@ -192,6 +196,9 @@ class TrafficLightDQN:
 
             if if_pretrain:
                 _, q_values = self.agent.choose(count=current_time, if_pretrain=if_pretrain)
+                # print("state.time_this_phase:", state.time_this_phase)
+                # print("state.cur_phase", state.cur_phase)
+                # print("len:", phase_time_now)
                 if state.time_this_phase[0][0] < phase_time_now[state.cur_phase[0][0]]:
                     action_pred = 0
                 else:

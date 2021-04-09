@@ -100,6 +100,8 @@ class SumoAgent:
             current_phase_number = self.get_current_phase()
             if action == 1 and i == 0:
                 action_in_second = 1
+            
+            # print("test", rewards_detail_dict_list)
             self.current_phase, self.current_phase_duration, self.vehicle_dict = map_computor.run(action=action_in_second,
                                                                                current_phase=current_phase_number,
                                                                                current_phase_duration=self.current_phase_duration,
@@ -109,6 +111,7 @@ class SumoAgent:
                                                                                rewards_detail_dict_list=rewards_detail_dict_list)  # run 1s SUMO
 
         #reward, reward_detail_dict = self.cal_reward(action)
+        # print("test1", rewards_detail_dict_list)
         reward = self.cal_reward_from_list(rewards_detail_dict_list)
         #self.update_vehicles()
         self.update_state()
@@ -127,6 +130,7 @@ class SumoAgent:
             current_phase_number = self.get_current_phase()
             if action == 1 and i == 0:
                 action_in_second = 1
+            # print("test", rewards_detail_dict_list)
             self.current_phase, self.current_phase_duration, self.vehicle_dict = map_computor.run(action=action_in_second,
                                                                                current_phase=current_phase_number,
                                                                                current_phase_duration=self.current_phase_duration,
@@ -134,6 +138,7 @@ class SumoAgent:
                                                                                rewards_info_dict=self.para_set.REWARDS_INFO_DICT,
                                                                                f_log_rewards=self.f_log_rewards,
                                                                                rewards_detail_dict_list=rewards_detail_dict_list)  # run 1s SUMO
+        # print("test1", rewards_detail_dict_list)
         reward = self.cal_reward_from_list(rewards_detail_dict_list)
 
         #self.update_vehicles()

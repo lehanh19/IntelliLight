@@ -93,12 +93,20 @@ direction_lane_dict = {"NSG": [1, 0], "SNG": [1, 0], "EWG": [1, 0], "WEG": [1, 0
 direction_list = ["NWG", "WSG", "SEG", "ENG", "NSG", "SNG", "EWG", "WEG", "NEG", "WNG", "SWG", "ESG"]
 
 #min_phase_time = [30, 96, 74]
-min_phase_time_7 = [10, 35]
+# min_phase_time_7 = [10, 35]
 node_light_7 = "node0"
-phases_light_7 = ["WNG_ESG_EWG_WEG_WSG_ENG", "NSG_NEG_SNG_SWG_NWG_SEG"]
-WNG_ESG_EWG_WEG_WSG_ENG = "grrr gGGG grrr gGGG".replace(" ", "")
-NSG_NEG_SNG_SWG_NWG_SEG = "gGGG grrr gGGG grrr".replace(" ", "")
-controlSignal = (WNG_ESG_EWG_WEG_WSG_ENG, NSG_NEG_SNG_SWG_NWG_SEG)
+# phases_light_7 = ["WNG_ESG_EWG_WEG_WSG_ENG", "NSG_NEG_SNG_SWG_NWG_SEG"]
+# WNG_ESG_EWG_WEG_WSG_ENG = "grrr gGGG grrr gGGG".replace(" ", "")
+# NSG_NEG_SNG_SWG_NWG_SEG = "gGGG grrr gGGG grrr".replace(" ", "")
+# controlSignal = (WNG_ESG_EWG_WEG_WSG_ENG, NSG_NEG_SNG_SWG_NWG_SEG)
+min_phase_time_7 = [9, 35, 9, 35]
+phases_light_7 = ["WNG_ESG", "WEG_EWG", "SWG_NEG", "SNG_NSG"]
+WNG_ESG = "grrG grrr grrG grrr".replace(" ", "")
+WEG_EWG = "gGGr grrr gGGr grrr".replace(" ", "")
+SWG_NEG = "grrr grrG grrr grrG".replace(" ", "")
+SNG_NSG = "grrr gGGr grrr gGGr".replace(" ", "")
+controlSignal = (WNG_ESG, WEG_EWG, SWG_NEG, SNG_NSG)
+
 
 listLanes=['edge1-0_0','edge1-0_1','edge1-0_2','edge2-0_0','edge2-0_1','edge2-0_2',
                                  'edge3-0_0','edge3-0_1','edge3-0_2','edge4-0_0','edge4-0_1','edge4-0_2']
@@ -134,7 +142,7 @@ def phase_affected_lane(phase="NSG_SNG",
                     # affacted_lanes.append("%s_%d" % (v, 0))
     if affected_lanes == []:
         raise("Please check your phase and lane_number_dict in phase_affacted_lane()!")
-    return affected_lanes
+    return affected_lanes # affected_lanes["edge3-0_1", "edge3-0_0", "edge4-0_1", "edge4-0_0"]
 
 
 '''
@@ -358,13 +366,16 @@ def get_rewards_from_sumo(vehicle_dict, action, rewards_info_dict,
 
 
     for k, v in reward_detail_dict.items():
+        print("v", v)
         if v[0]:  # True or False
             reward += v[1]*v[2]
     reward = restrict_reward(reward)#,func="linear")
+    # print("reward:", reward)
     return reward, reward_detail_dict
 
 def get_rewards_from_dict_list(rewards_detail_dict_list):
     reward = 0
+    # print("Ahihih", rewards_detail_dict_list)
     for i in range(len(rewards_detail_dict_list)):
         for k, v in rewards_detail_dict_list[i].items():
             if v[0]:  # True or False

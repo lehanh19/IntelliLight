@@ -17,10 +17,10 @@ setting_memo = "one_run"
 
 # first column: for train, second column: for spre_train
 list_traffic_files = [
-    [["cross.2phases_rou1_switch_rou0.xml"], ["cross.2phases_rou1_switch_rou0.xml"]],
+    # [["cross.2phases_rou1_switch_rou0.xml"], ["cross.2phases_rou1_switch_rou0.xml"]],
     [["cross.2phases_rou01_equal_300s.xml"], ["cross.2phases_rou01_equal_300s.xml"]],
-    [["cross.2phases_rou01_unequal_5_300s.xml"], ["cross.2phases_rou01_unequal_5_300s.xml"]],
-    [["cross.all_synthetic.rou.xml"], ["cross.all_synthetic.rou.xml"]],
+    # [["cross.2phases_rou01_unequal_5_300s.xml"], ["cross.2phases_rou01_unequal_5_300s.xml"]],
+    # [["cross.all_synthetic.rou.xml"], ["cross.all_synthetic.rou.xml"]],
 ]
 
 list_model_name = [
@@ -38,7 +38,7 @@ np.random.seed(SEED)
 #from tensorflow import set_random_seed
 #set_random_seed((SEED))
 import tensorflow
-tensorflow.random.set_seed((SEED))
+# tensorflow.random.set_seed((SEED))
 
 import json
 import os
@@ -67,7 +67,7 @@ sumoCmd_nogui_pretrain = [sumoBinary_nogui,
                               os.path.split(os.path.realpath(__file__))[0], setting_memo)]
 
 for model_name in list_model_name:
-    for traffic_file, traffic_file_pretrain in list_traffic_files[2:]:
+    for traffic_file, traffic_file_pretrain in list_traffic_files[0:]:
         dic_exp = json.load(open(os.path.join(PATH_TO_CONF, "exp.conf"), "r"))
         dic_exp["MODEL_NAME"] = model_name
         dic_exp["TRAFFIC_FILE"] = traffic_file
